@@ -1,0 +1,99 @@
+
+using std::string
+using std::array
+
+let const TokenKind = {
+  Identifier = 0,
+  Number = 1, 
+
+  Add = 2,
+  Sub = 3,
+  Div = 4,
+  Mul = 5,
+  Mod = 6,
+  
+  LParen = 7,
+  RParen = 8,
+
+}
+
+struct Token {
+  value: string,
+  kind: int,
+}
+
+func kind_to_string(value: int) -> string {
+    let v =  match value {
+      0 => "Identifier"
+      1 => "Number"
+      2 => "Add"
+      3 => "Sub"
+      4 => "Div"
+      5 => "Mul"
+      6 => "Mod"
+      7 => "LParen"
+      8 => "RParen"
+      default => "unrecognized"
+    }
+    return v
+  }
+
+
+func lex(input: string) -> array<Token> {
+  let mut pos = 0
+  let mut tokens = array<Token>()
+
+  for pos < input.len() {
+    let mut char = input[pos]
+    
+    if char == " " || char == "\n" || char == "\t" {
+      pos++
+      continue
+    }
+    
+    let mut value = ""
+    if char.isalpha() {
+      for char.isalpha() {
+        value += char
+        pos++
+        char = input[pos]
+      }
+      tokens.push(Token(value, TokenKind.Identifier))
+    } else if char.isdigit() {
+      for char.isdigit() {
+        value += char
+        pos++
+        char = input[pos]
+      }
+      tokens.push(Token(value, TokenKind.Number))
+    } else if char.ispunct() {
+      for char.ispunct() {
+        value += char
+        pos++
+        char = input[pos]
+      }
+
+      // xD super hacky
+      let kind = match value {
+        "+" => int(TokenKind.Add)
+        "-" => int(TokenKind.Sub)
+        "/" => int(TokenKind.Div)
+        "*" => int(TokenKind.Mul)
+        "%" => int(TokenKind.Mod)
+        ")" => int(TokenKind.RParen)
+        "(" => int(TokenKind.LParen)
+        default => {
+          println("Error: unrecognized operator")
+          exit(1)
+        }
+      }
+
+      tokens.push(Token(value, kind))
+
+    }
+
+
+  }
+  return tokens
+}
+

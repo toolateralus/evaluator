@@ -1,0 +1,17 @@
+using system
+using std::array
+using std::string
+
+import "lexer.scrit"
+import "parser.scrit"
+import "interp.scrit"
+
+func main(args: array<string) -> int {
+  let notInt = 10;  
+}
+
+
+
+// args provided by environment.
+println(main(args))
+
